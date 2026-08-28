@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<title>跟随鼠标贪吃蛇</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden}
+canvas{border:2px solid #4cd964;background:#000;max-width:100%;max-height:90vh}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+function resize(){
+  const w = Math.min(window.innerWidth-20, 600);
+  const h = Math.min(window.innerHeight-120, 600);
+  canvas.width = w;
+  canvas.height = h;
+}
+resize();
+window.addEventListener('resize',resize);
+
+let snake = [{x:canvas.width/2,y:canvas.height/2}];
+let targetX = snake[0].x;
+let targetY = snake[0].y;
+let food = spawnFood();
+const segSize = 12;
+
+canvas.addEventListener('mousemove',e=>{
+  const rect = canvas.getBoundingClientRect();
+  targetX = e.clientX - rect.left;
+  targetY = e.clientY - rect.top;
+})
+
+canvas.addEventListener('touchmove',e=>{
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches[0];
+  targetX = t.clientX - rect.left;
+  targetY = t.clientY - rect.top;
+},{passive:false})
+
+function spawnFood(){
+  return {
+    x:Math.floor(Math.random()*(canvas.width-segSize))+segSize,
+    y:Math.floor(Math.random()*(canvas.height-segSize))+segSize
+  }
+}
+
+function loop(){
+  const head = {...snake[0]};
+  head.x += (targetX-head.x)*0.12;
+  head.y += (targetY-head.y)*0.12;
+  snake.unshift(head);
+
+  if(Math.hypot(head.x-food.x, head.y-food.y) < segSize){
+    food = spawnFood();
+  }else{
+    snake.pop();
+  }
+
+  ctx.fillStyle="#000";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle="#4cd964";
+  snake.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,segSize/2,0,Math.PI*2);
+    ctx.fill();
+  })
+
+  ctx.fillStyle="#ff3b30";
+  ctx.beginPath();
+  ctx.arc(food.x,food.y,0.5*segSize,0,Math.PI*2);
+  ctx.fill();
+
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
