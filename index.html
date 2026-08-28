@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
 <title>跟随鼠标贪吃蛇</title>
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden}
@@ -32,25 +32,25 @@ let targetY = snake[0].y;
 let food = spawnFood();
 const segSize = 12;
 
-canvas.addEventListener('mousemove',e=>{
+canvas.addEventListener('mousemove',function(e){
   const rect = canvas.getBoundingClientRect();
   targetX = e.clientX - rect.left;
   targetY = e.clientY - rect.top;
-})
+});
 
-canvas.addEventListener('touchmove',e=>{
+canvas.addEventListener('touchmove',function(e){
   e.preventDefault();
   const rect = canvas.getBoundingClientRect();
   const t = e.touches[0];
   targetX = t.clientX - rect.left;
   targetY = t.clientY - rect.top;
-},{passive:false})
+},{passive:false});
 
 function spawnFood(){
   return {
     x:Math.floor(Math.random()*(canvas.width-segSize))+segSize,
     y:Math.floor(Math.random()*(canvas.height-segSize))+segSize
-  }
+  };
 }
 
 function loop(){
@@ -69,15 +69,15 @@ function loop(){
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
   ctx.fillStyle="#4cd964";
-  snake.forEach(p=>{
+  snake.forEach(function(p){
     ctx.beginPath();
     ctx.arc(p.x,p.y,segSize/2,0,Math.PI*2);
     ctx.fill();
-  })
+  });
 
   ctx.fillStyle="#ff3b30";
   ctx.beginPath();
-  ctx.arc(food.x,food.y,0.5*segSize,0,Math.PI*2);
+  ctx.arc(food.x,food.y,segSize*0.5,0,Math.PI*2);
   ctx.fill();
 
   requestAnimationFrame(loop);
