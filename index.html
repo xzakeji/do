@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
-<title>跟随鼠标贪吃蛇</title>
+<title>贪吃蛇</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -54,7 +54,8 @@ function spawnFood(){
 }
 
 function loop(){
-  const head = {...snake[0]};
+  //不用 {...}展开，手动复制对象，兼容旧浏览器
+  const head = {x: snake[0].x, y: snake[0].y};
   head.x += (targetX-head.x)*0.12;
   head.y += (targetY-head.y)*0.12;
   snake.unshift(head);
