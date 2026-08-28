@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
-<title>贪吃蛇</title>
+<title>跟随鼠标贪吃蛇</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -26,11 +26,18 @@ function resize(){
 resize();
 window.addEventListener('resize',resize);
 
+const segSize = 12;
 let snake = [{x:canvas.width/2,y:canvas.height/2}];
 let targetX = snake[0].x;
 let targetY = snake[0].y;
+
+function spawnFood(){
+  return {
+    x:Math.floor(Math.random()*(canvas.width-segSize))+segSize,
+    y:Math.floor(Math.random()*(canvas.height-segSize))+segSize
+  };
+}
 let food = spawnFood();
-const segSize = 12;
 
 canvas.addEventListener('mousemove',function(e){
   const rect = canvas.getBoundingClientRect();
@@ -46,15 +53,7 @@ canvas.addEventListener('touchmove',function(e){
   targetY = t.clientY - rect.top;
 },{passive:false});
 
-function spawnFood(){
-  return {
-    x:Math.floor(Math.random()*(canvas.width-segSize))+segSize,
-    y:Math.floor(Math.random()*(canvas.height-segSize))+segSize
-  };
-}
-
 function loop(){
-  //不用 {...}展开，手动复制对象，兼容旧浏览器
   const head = {x: snake[0].x, y: snake[0].y};
   head.x += (targetX-head.x)*0.12;
   head.y += (targetY-head.y)*0.12;
